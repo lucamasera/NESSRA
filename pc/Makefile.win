@@ -1,0 +1,24 @@
+CC = x86_64-w64-mingw32-gcc
+CXX = x86_64-w64-mingw32-g++
+CFLAGS = -c -O3 -Wall -Wextra -pedantic
+LDFLAGS = -static -static-libgcc -static-libstdc++
+CXXSOURCES = Graph.cpp utility.cpp cpdag.cpp skeleton.cpp pc.cpp
+CSOURCES = erf.c
+OBJECTS = $(CXXSOURCES:.cpp=.o) $(CSOURCES:.c=.o)
+EXECUTABLE = pc++
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(CXX) $(LDFLAGS) $(OBJECTS) -o bin/$@
+
+.cpp.o:
+	$(CXX) $(CFLAGS) $< -o $@
+
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	rm -rf bin/$(EXECUTABLE)* *.o *~
+
+.PHONY: all clean
