@@ -322,19 +322,31 @@ void fprintEdgesCSV(Graph* g, const intpair* nodesPermutation, const string file
  	ostringstream strs;
  	
  	// print the "header" (the probeIDs of the tile)
- 	strs << "# ";
+	if (mode){
+                strs << "# ";
+ 	        for (int i = 0; i < g->nRows; i++) {
+ 		        strs << g->probeIDs[nodesPermutation[i].second];
 
- 	for (int i = 0; i < g->nRows; i++) {
- 		strs << g->probeIDs[nodesPermutation[i].second];
+ 		        if (i < (g->nRows - 1)) {
+ 			        strs << ",";
+ 		        }
+ 	        }
+        strs << endl;
+        }
 
- 		if (i < (g->nRows - 1)) {
- 			strs << ",";
- 		}
- 	}
+        if (mode == 0){
+                // print undirected edges
+                for (int i = 0; i < g->nRows-1; i++) {
+                        for (int j = i+1; j < g->nRows; j++) {
+                                if (g->matrix[nodesPermutation[i].second][nodesPermutation[j].second]) {
+                                        strs << nodesPermutation[i].first << "," << nodesPermutation[j].first << endl;
+                                }
+                        }
 
-	strs << endl;
-
- 	if (mode == 0) {
+                        out << strs.str();
+                        strs.str(std::string()); // cleans the stringstream
+                }
+        } else if (mode == 1) {
 	 	// print undirected edges
 		for (int i = 0; i < g->nRows-1; i++) {
 			for (int j = i+1; j < g->nRows; j++) {
@@ -346,7 +358,7 @@ void fprintEdgesCSV(Graph* g, const intpair* nodesPermutation, const string file
 			out << strs.str();
 			strs.str(std::string()); // cleans the stringstream
 		}
-	} else if (mode == 1) {
+	} else if (mode == 2) {
 		// print directed edges
 		for (int i = 0; i < g->nRows; i++) {
 			for (int j = i + 1; j < g->nRows; j++) {
@@ -372,7 +384,7 @@ void fprintEdgesCSV(Graph* g, const intpair* nodesPermutation, const string file
 			out << strs.str();
 			strs.str(std::string()); // cleans the stringstream
 		}
-	}  else if (mode == 2) {
+	}  else if (mode == 3) {
 		strs.str(std::string()); // cleans the header, not valid for igraph format
 
 		// print directed edges in igraph format

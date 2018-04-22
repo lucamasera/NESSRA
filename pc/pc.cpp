@@ -68,9 +68,9 @@ void printUsage(void) {
 	cout << "\t-s\tFlag for the order independent skeleton function. The default" << endl;
 	cout << "\t\tvalue is false" << endl;
 	cout << endl;
-	cout << "\t-f\tSpecified the output format. Values are: 0 for the undirected" << endl;
-	cout << "\t\tversion (saved into a .csv file), 1 for the directed version" << endl;
-	cout << "\t\t(saved into a .ncol file), 2 for the igraph standard (compatible" << endl;
+	cout << "\t-f\tSpecified the output format. Values are: 1 for the undirected" << endl;
+	cout << "\t\tversion (saved into a .csv file), 2 for the directed version" << endl;
+	cout << "\t\t(saved into a .ncol file), 3 for the igraph standard (compatible" << endl;
 	cout << "\t\twith R, python and Cytoscape and saved into a .ncol file)." << endl;
 	cout << "\t-b\tBlanzieri's orientation method" << endl;
 }
@@ -232,7 +232,7 @@ int main(int argc, char* argv[]) {
 		// print the CPDAG
 		fprintEdgesCSV(g, tiles[c], ss.str(), output_format);
 
-		if (output_format) {
+		if (output_format > 1) {
 			//empty the memory for sepSet
 			for (int i = 0; i < g->nRows; i++) {
 				for (int j = 0; j < g->nRows; j++) {
