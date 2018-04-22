@@ -36,5 +36,6 @@ expansion = []
 for p, c in expansion_count.items():
     expansion.append([p, c, c/((iterations + extra_count.get(p, 0) * len(lgn_probes)))])
 
-for p, f_abs, f_rel in sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True):
-    print('{},{},{}\n'.format(p, f_abs, f_rel))
+with open(os.path.join(pcim_folder, 'nessra.expansion'), 'w') as expansion_file:
+    for p, f_abs, f_rel in sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True):
+        expansion_file.write('{},{},{:.6f}\n'.format(p, f_abs, f_rel))
