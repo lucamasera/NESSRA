@@ -1,3 +1,4 @@
 /pc/bin/pc++*
 /data/
+/__pycache__/
 *.o

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 
-__author__ = 'Francesco Asnicar'
-__version__ = '0.3'
-__date__ = '24 July 2017'
+__author__ = 'Francesco Asnicar, Luca Masera'
+__version__ = '0.4'
+__date__ = 'April 23. 2018'
 
 
 import os
@@ -15,6 +15,8 @@ import random
 import argparse as ap
 import subprocess as sb
 import multiprocessing as mp
+
+from collections import Counter
 
 
 def info(s, init_new_line=False):
@@ -118,7 +120,7 @@ def fix_lgn_string(lgn_name):
     return lgn_name[:lgn_name.rfind('.')].replace('_', '-') # find and remove the extension and replace '_' with '-'
 
 
-def pcim(expression_data, lgn_path, alpha, iterations, tile_size, executions_path, ncpu):
+def work_generator(expression_data, lgn_path, alpha, iterations, tile_size, executions_path, ncpu):
     lgnProbes, nProbes = getLgnProbes(lgn_path, expression_data) # gets the LGN indices from the LGN network file, also returns the total number of probes from the 'complete' file
     subsetSize = tile_size - len(lgnProbes) # get the number of genes to add to the LGN
 
@@ -230,29 +232,68 @@ def pcpp_execs(inputs, pcpp, expr_data, out_folder, ncpu, alpha, cutoff=0):
             sys.exit(1)
 
 
-if __name__ == '__main__':
+def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu):
     t0 = time.time()
-    pars = read_params()
-
+    
     # create output directory
-    if os.path.isdir(pars['workingdirectory']):
-        warning('"{}" directory already exists, contents will be overwritten!'.format(pars['workingdirectory']))
-        shutil.rmtree(pars['workingdirectory'])
+    if os.path.isdir(workingdirectory):
+        warning('"{}" directory already exists, contents will be overwritten!'.format(workingdirectory))
+        shutil.rmtree(workingdirectory)
 
-    os.makedirs(pars['workingdirectory'])
-    os.makedirs(pars['workingdirectory']+'/inputs')
-    os.makedirs(pars['workingdirectory']+'/results')
+    os.makedirs(workingdirectory)
+    os.makedirs(os.path.join(workingdirectory, 'inputs'))
+    os.makedirs(os.path.join(workingdirectory, 'results'))
  
-    with open(pars['data']) as f:
+    with open(data) as f:
         for line in f:
             col_number = len(line.split(','))-1
             break
 
     num_exp = 1
-    input_files = pcim(os.path.abspath(pars['data']), os.path.abspath(pars['lgn']), pars['alpha'], pars['iterations'], pars['tilesize'], os.path.abspath(pars['workingdirectory']), pars['ncpu'])
+    input_files = work_generator(os.path.abspath(data), os.path.abspath(lgn), alpha, iterations, tilesize, os.path.abspath(workingdirectory), ncpu)
 
-    # pcpp_execs(input_files, pars['pcpp'], pars['ncpu'], pars['data'], pars['workingdirectory'], pars['alpha'])
-    pcpp_execs(input_files, pars['pcpp'], pars['data'], pars['workingdirectory'], pars['ncpu'], pars['alpha'])
+    pcpp_execs(input_files, pcpp, data, workingdirectory, ncpu, alpha)
     t1 = time.time()
-    info('{}'.format(int(t1-t0)))
+    info('pcim execution time: {}'.format(int(t1-t0)))
+    
+    extra_count = {int(p):int(f) for f,p in [l.strip().split() for l in open(os.path.join(workingdirectory, 'frequency.txt')).readlines()]}
+    lgn_probes = {int(p.strip()) for p in open(os.path.join(workingdirectory, 'lgn_nodes.txt')).readlines()}
+
+    pc_results = os.listdir(os.path.join(workingdirectory, 'results'))
+    
+    edge_count = Counter()
+    
+    for pc in pc_results:
+        with open(os.path.join(os.path.join(workingdirectory, 'results'), pc)) as f:
+            edges = [tuple(sorted(map(int, e.strip().split(','))))  for e in f.readlines()]
+        edge_count.update(edges)
+    
+    
+    expansion_count = Counter()
+    
+    for e, c in edge_count.items():
+        x = set(e).difference(lgn_probes)
+        if len(x) == 1:
+            p = x.pop()
+            expansion_count.update({p:c,})
+    
+    expansion = []
+    for p, c in expansion_count.items():
+        expansion.append([p, c, c/((iterations + extra_count.get(p, 0) * len(lgn_probes)))])
+    
+    with open(os.path.join(workingdirectory, 'expansion.csv'), 'w') as expansion_file:
+        expansion_file.write('{},{},{}\n'.format('probe','abs_count','rel_frequency'))
+        for p, f_abs, f_rel in sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True):
+            expansion_file.write('{},{},{:.6f}\n'.format(p, f_abs, f_rel))
+    
+    t2 = time.time()
+    info('post-processing time: {}'.format(int(t2-t1)))
+
+
+if __name__ == '__main__':
+    pars = read_params()
+    
+    pcim(pars['lgn'], pars['data'], pars['tilesize'], pars['iterations'], 
+        pars['alpha'], pars['workingdirectory'], pars['pcpp'], pars['ncpu'])
+    
     sys.exit(0)
