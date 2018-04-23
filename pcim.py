@@ -243,11 +243,13 @@ def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu):
     os.makedirs(workingdirectory)
     os.makedirs(os.path.join(workingdirectory, 'inputs'))
     os.makedirs(os.path.join(workingdirectory, 'results'))
- 
+    
+    probe_ids = []
     with open(data) as f:
+        f.readline()
         for line in f:
-            col_number = len(line.split(','))-1
-            break
+            probe_ids.append(line.split(',')[0])
+        col_number = len(line.split(','))-1
 
     num_exp = 1
     input_files = work_generator(os.path.abspath(data), os.path.abspath(lgn), alpha, iterations, tilesize, os.path.abspath(workingdirectory), ncpu)
@@ -282,9 +284,9 @@ def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu):
         expansion.append([p, c, c/((iterations + extra_count.get(p, 0) * len(lgn_probes)))])
     
     with open(os.path.join(workingdirectory, 'expansion.csv'), 'w') as expansion_file:
-        expansion_file.write('{},{},{}\n'.format('probe','abs_count','rel_frequency'))
-        for p, f_abs, f_rel in sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True):
-            expansion_file.write('{},{},{:.6f}\n'.format(p, f_abs, f_rel))
+        expansion_file.write('{},{},{},{}\n'.format('rank', 'probe','abs_count','rel_frequency'))
+        for i, (p, f_abs, f_rel) in enumerate(sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True)):
+            expansion_file.write('{},{},{},{:.6f}\n'.format(i+1, probe_ids[int(p)], f_abs, f_rel))
     
     t2 = time.time()
     info('post-processing time: {}'.format(int(t2-t1)))
