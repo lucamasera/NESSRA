@@ -19,15 +19,15 @@ p = ap.ArgumentParser(description='NAME and VERSION: pcim.py, ver. '+__version__
     'AUTHOR: '+__author__+
     'DESCRIPTION:')
 arg = p.add_argument
-arg('-l', '--lgn', type=str, required=True, help='')
-arg('-d', '--data', type=str, required=True, help='')
-arg('-t', '--tilesizes', nargs='+', type=int, required=True, help='')
-arg('-i', '--iterations', nargs='+', type=int, required=True, help='')
-arg('-a', '--alphas', nargs='+', type=float, required=True, help='')
-arg('-k', '--mc4_list_lenght', type=int, required=True, help='')
-arg('-o', '--experiment_name', type=str, required=True, help='')
-arg('-p', '--pcpp', type=str, required=True, help='')
-arg('-n', '--ncpu', type=int, required=False, default=1, help='')
+arg('-l', '--lgn', type=str, required=True, help='file containing the edges of the gene-network to expand;')
+arg('-d', '--data', type=str, required=True, help='gene-expression experiment data matrix;')
+arg('-t', '--tilesizes', nargs='+', type=int, required=True, help='one or more values for the subsets-size;')
+arg('-i', '--iterations', nargs='+', type=int, required=True, help='one or more values for the number of iterations;')
+arg('-a', '--alphas', nargs='+', type=float, required=True, help='one or more values for the confidence threshold alpha;')
+arg('-k', '--mc4_list_lenght', type=int, required=True, help='lenght of the list to aggregate with MC4;')
+arg('-o', '--experiment_name', type=str, required=True, help='output folder containing the experiments;')
+arg('-p', '--pcpp', type=str, required=True, help='path to the pc++ executable;')
+arg('-n', '--ncpu', type=int, required=False, default=1, help='number of CPUs to use in parallel.')
 
 args = p.parse_args()
 
