@@ -91,6 +91,7 @@ expan_array <-
 ranks <- list()
 
 max.len=0
+min.len=strtoi(args[2])
 expan_data <- list()
 
 for (i in 1:(length(d))){ #loop over the network folders
@@ -101,6 +102,7 @@ for (i in 1:(length(d))){ #loop over the network folders
   temp=read.csv(exp_file,header=TRUE,skip=0)
   expan_data[[i]]<- data.frame(lapply(temp$probe, as.character), stringsAsFactors=FALSE)
   max.len=max(max.len,length(expan_data[[i]]))
+  min.len=min(min.len,length(expan_data[[i]]))
 }
 
 x <- list()
@@ -108,7 +110,7 @@ for (j in 1:length(d)){
   x[[j]]= c(expan_data[[j]], rep(NA, max.len - length(expan_data[[j]]))) #for the array to be even, path with NAs.
 }
 x=do.call(rbind, x)
-ranks <- mc4_ranker(x,0,strtoi(args[2])) # call the rankers the third parameter is how many genes we want in the rank
+ranks <- mc4_ranker(x,0,min.len) # call the rankers the third parameter is how many genes we want in the rank
 rm(x,expan_data,f,temp,max.len)
 
 write.csv(ranks, 'mc4_aggregation.csv', row.names = FALSE, quote = FALSE) # write results to file
