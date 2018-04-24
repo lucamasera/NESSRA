@@ -43,3 +43,10 @@ We provide an example script to run an expansion on a subset of vitis gene-expre
 ```
 ./run_NESSRA_example.sh
 ```
+This may take several minutes.
+
+## Results reprodution
+Download the input [dataset](https://gene.disi.unitn.it/test/download/2b9/vv_experiments.csv) for Vitis vinifera.
+```
+wget https://gene.disi.unitn.it/test/download/2b9/vv_experiments.csv
+```
