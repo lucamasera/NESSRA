@@ -20,14 +20,26 @@ The code has been tested with:
 
 
 ## Usage
-download data fodler from gdrive and decompress
-
 Compile the source code of the `pc++` applicative.
 ```
 cd pc/ && make && cd ..
 ```
-
-Launch the example code
+Here are listed the parameters of NESSRA.
 ```
-sh run_NESSRA.sh
+-h, --help            show this help message and exit
+-l --lgn              file containing the edges of the gene-network to
+                      expand;
+-d --data             gene-expression experiment data matrix;
+-t --tilesizes        one or more values for the subsets-size;
+-i --iterations       one or more values for the number of iterations;
+-a --alphas           one or more values for the confidence threshold alpha;
+-k --mc4_list_lenght  lenght of the list to aggregate with MC4;
+-o --experiment_name  output folder containing the experiments;
+-p --pcpp             path to the pc++ executable;
+-n  --ncpu            number of CPUs to use in parallel.
+```
+
+We provide an example script to run an expansion on a subset of vitis gene-expression data.
+```
+./run_NESSRA_example.sh
 ```
