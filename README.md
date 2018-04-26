@@ -45,8 +45,15 @@ We provide an example script to run an expansion on a subset of vitis gene-expre
 ```
 This may take several minutes.
 
-## Results reprodution
-Download the input [dataset](https://gene.disi.unitn.it/test/download/2b9/vv_experiments.csv) for Vitis vinifera.
+## Frontiers paper's results reproduction
+Download the input [dataset](https://gene.disi.unitn.it/test/download/2b9/vv_experiments.csv) for Vitis vinifera
 ```
 wget https://gene.disi.unitn.it/test/download/2b9/vv_experiments.csv
 ```
+and run `NESSRA.py` on the input gene-networks stored in `frontiers_paper_data/input/`.
+
+Otherwise run the convinience script to execute the NESSRA pipeline on the four networks with the parameters presented in the paper.
+```
+./run_paper_experiments.sh
+```
+The computation of these results may take days.
