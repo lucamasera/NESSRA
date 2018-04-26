@@ -1,5 +1,5 @@
 # NESSRA: Network Expansion by Stratified Subsetting and Ranking Aggregation
-[NESSRA](http://journals.sagepub.com/doi/abs/10.1177/1094342016662508) is a pipeline that finds candidate genes to expand a known gene-network.
+[NESSRA](http://journals.sagepub.com/doi/abs/10.1177/089443939100900106) is a pipeline that finds candidate genes to expand a known gene-network.
 NESSRA applies the `skeleton` function of the [`PC-algorithm`](https://www.researchgate.net/publication/242448131_Causation_Prediction_and_Search) on all the disjoint subsets (of size `t`) of the genes in a given organism.
 This step is repeated `i` times shuffling the input genes, and the results are combined in an expansion list.
 Several expansion lists are produced changing the subset-size, number of iterations, and alpha parameters.
