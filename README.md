@@ -36,7 +36,7 @@ Here are listed the parameters of NESSRA.
 -k --mc4_list_lenght  lenght of the list to aggregate with MC4;
 -o --experiment_name  output folder containing the experiments;
 -p --pcpp             path to the pc++ executable;
--n  --ncpu            number of CPUs to use in parallel.
+-n --ncpu             number of CPUs to use in parallel.
 ```
 
 We provide an example script to run an expansion on a subset of vitis gene-expression data.
