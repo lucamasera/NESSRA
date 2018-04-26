@@ -26,17 +26,17 @@ cd pc/ && make && cd ..
 ```
 Here are listed the parameters of NESSRA.
 ```
--h, --help             show this help message and exit
--l, --lgn              file containing the edges of the gene-network to
-                       expand;
--d, --data             gene-expression experiment data matrix;
--t, --tilesizes        one or more values for the subsets-size;
--i, --iterations       one or more values for the number of iterations;
--a, --alphas           one or more values for the confidence threshold alpha;
--k, --mc4_list_lenght  lenght of the list to aggregate with MC4;
--o, --experiment_name  output folder containing the experiments;
--p, --pcpp             path to the pc++ executable;
--n, --ncpu             number of CPUs to use in parallel.
+-h, --help                  show this help message and exit
+-l, --lgn                   file containing the edges of the gene-network to expand;
+-d, --data                  gene-expression experiment data matrix;
+-t, --tilesizes             one or more values for the subsets-size;
+-i, --iterations            one or more values for the number of iterations;
+-a, --alphas                one or more values for the confidence threshold alpha;
+-k, --mc4_list_lenght       lenght of the list to aggregate with MC4;
+-o, --experiment_name       output folder containing the experiments;
+-p, --pcpp                  path to the pc++ executable;
+-n, --ncpu                  number of CPUs to use in parallel;
+-c, --clean_intermediate    whether or not to keep intermediate reasults of each PC.
 ```
 
 We provide an example script to run an expansion on a subset of vitis gene-expression data.
