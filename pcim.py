@@ -56,6 +56,7 @@ def read_params():
     arg('-o', '--workingdirectory', type=str, required=False, help='')
     arg('-p', '--pcpp', type=str, required=True, help='')
     arg('-n', '--ncpu', type=int, required=False, default=1, help='')
+    arg('-c', '--clean_intermediate', action='store_true', help='')
 
     args = p.parse_args()
 
@@ -232,7 +233,7 @@ def pcpp_execs(inputs, pcpp, expr_data, out_folder, ncpu, alpha, cutoff=0):
             sys.exit(1)
 
 
-def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu):
+def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu, clean_intermediate):
     t0 = time.time()
     
     # create output directory
@@ -281,12 +282,16 @@ def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu):
     
     expansion = []
     for p, c in expansion_count.items():
-        expansion.append([p, c, c/((iterations + extra_count.get(p, 0) * len(lgn_probes)))])
+        expansion.append([p, c, c/(((iterations + extra_count.get(p, 0)) * len(lgn_probes)))])
     
     with open(os.path.join(workingdirectory, 'expansion.csv'), 'w') as expansion_file:
         expansion_file.write('{},{},{},{}\n'.format('rank', 'node','abs_count','rel_frequency'))
         for i, (p, f_abs, f_rel) in enumerate(sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True)):
             expansion_file.write('{},{},{},{:.6f}\n'.format(i+1, probe_ids[int(p)], f_abs, f_rel))
+    
+    if clean_intermediate:
+        info('Intermediate results are removed.')
+        shutil.rmtree(os.path.join(workingdirectory, 'results'))
     
     t2 = time.time()
     info('post-processing time: {}'.format(int(t2-t1)))
@@ -296,6 +301,6 @@ if __name__ == '__main__':
     pars = read_params()
     
     pcim(pars['lgn'], pars['data'], pars['tilesize'], pars['iterations'], 
-        pars['alpha'], pars['workingdirectory'], pars['pcpp'], pars['ncpu'])
+        pars['alpha'], pars['workingdirectory'], pars['pcpp'], pars['ncpu'], pars['clean_intermediate'])
     
     sys.exit(0)

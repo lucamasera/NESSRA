@@ -27,7 +27,8 @@ arg('-a', '--alphas', nargs='+', type=float, required=True, help='one or more va
 arg('-k', '--mc4_list_lenght', type=int, required=True, help='lenght of the list to aggregate with MC4;')
 arg('-o', '--experiment_name', type=str, required=True, help='output folder containing the experiments;')
 arg('-p', '--pcpp', type=str, required=True, help='path to the pc++ executable;')
-arg('-n', '--ncpu', type=int, required=False, default=1, help='number of CPUs to use in parallel.')
+arg('-n', '--ncpu', type=int, required=False, default=1, help='number of CPUs to use in parallel;')
+arg('-c', '--clean_intermediate', action='store_true', help='whether or not to keep intermediate reasults of each PC.')
 
 args = p.parse_args()
 
@@ -41,7 +42,7 @@ for i in args.iterations:
     for a in args.alphas:
         for t in args.tilesizes:
             info('Computing i={} a={} t={}'.format(i,a,t))
-            pcim(args.lgn, args.data, t, i, a, os.path.join(args.experiment_name, 'i{}_t{}_a{}'.format(i,t,a)), args.pcpp, args.ncpu)
+            pcim(args.lgn, args.data, t, i, a, os.path.join(args.experiment_name, 'i{}_t{}_a{}'.format(i,t,a)), args.pcpp, args.ncpu, args.clean_intermediate)
 
 cmd = ['Rscript', 'rank_expansions.R', args.experiment_name, str(args.mc4_list_lenght), '0']
 t = sb.check_call(cmd, stdout=sb.DEVNULL, stderr=sb.DEVNULL)
