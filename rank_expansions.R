@@ -86,9 +86,11 @@ work_dir=args[1]; #put the path to the expansion folder here
 require(markovchain)
 
 setwd(work_dir)
-d=dir() # get netowrk folders
+d=list.dirs(recursive=FALSE) # get netowrk folders
 expan_array <-
 ranks <- list()
+
+print(d)
 
 max.len=0
 min.len=strtoi(args[2])
@@ -99,8 +101,8 @@ for (i in 1:(length(d))){ #loop over the network folders
   exp_ind=grep('expansion',f)  #get index for all the files in network folder that includes 'expansion' in their name
   exp_file = paste(d[i],'/',f[exp_ind[1]],sep='')
   print(exp_file)
-  temp=read.csv(exp_file,header=TRUE,skip=0)
-  expan_data[[i]]<- data.frame(lapply(temp$probe, as.character), stringsAsFactors=FALSE)
+  temp=read.csv(exp_file,header=TRUE,skip=strtoi(args[3]))
+  expan_data[[i]]<- data.frame(lapply(temp$node, as.character), stringsAsFactors=FALSE)
   max.len=max(max.len,length(expan_data[[i]]))
   min.len=min(min.len,length(expan_data[[i]]))
 }
@@ -110,6 +112,7 @@ for (j in 1:length(d)){
   x[[j]]= c(expan_data[[j]], rep(NA, max.len - length(expan_data[[j]]))) #for the array to be even, path with NAs.
 }
 x=do.call(rbind, x)
+
 ranks <- mc4_ranker(x,0,min.len) # call the rankers the third parameter is how many genes we want in the rank
 rm(x,expan_data,f,temp,max.len)
 

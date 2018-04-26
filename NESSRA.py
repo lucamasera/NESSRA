@@ -43,5 +43,5 @@ for i in args.iterations:
             info('Computing i={} a={} t={}'.format(i,a,t))
             pcim(args.lgn, args.data, t, i, a, os.path.join(args.experiment_name, 'i{}_t{}_a{}'.format(i,t,a)), args.pcpp, args.ncpu)
 
-cmd = ['Rscript', 'rank_expansions.R', args.experiment_name, str(args.mc4_list_lenght)]
+cmd = ['Rscript', 'rank_expansions.R', args.experiment_name, str(args.mc4_list_lenght), '0']
 t = sb.check_call(cmd, stdout=sb.DEVNULL, stderr=sb.DEVNULL)

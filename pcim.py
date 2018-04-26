@@ -284,7 +284,7 @@ def pcim(lgn, data, tilesize, iterations, alpha, workingdirectory, pcpp, ncpu):
         expansion.append([p, c, c/((iterations + extra_count.get(p, 0) * len(lgn_probes)))])
     
     with open(os.path.join(workingdirectory, 'expansion.csv'), 'w') as expansion_file:
-        expansion_file.write('{},{},{},{}\n'.format('rank', 'probe','abs_count','rel_frequency'))
+        expansion_file.write('{},{},{},{}\n'.format('rank', 'node','abs_count','rel_frequency'))
         for i, (p, f_abs, f_rel) in enumerate(sorted(expansion, key=lambda x: (x[2], x[1], x[0]), reverse=True)):
             expansion_file.write('{},{},{},{:.6f}\n'.format(i+1, probe_ids[int(p)], f_abs, f_rel))
     
