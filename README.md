@@ -26,9 +26,9 @@ cd pc/ && make && cd ..
 ```
 Here are listed the parameters of NESSRA.
 ```
--h, --help            show this help message and exit
+-h, --help             show this help message and exit
 -l, --lgn              file containing the edges of the gene-network to
-                      expand;
+                       expand;
 -d, --data             gene-expression experiment data matrix;
 -t, --tilesizes        one or more values for the subsets-size;
 -i, --iterations       one or more values for the number of iterations;
